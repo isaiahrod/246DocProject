@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -113,8 +117,21 @@ public class WindowView {
 		
 		saveMenuItem.setOnAction(action ->{
 			String s = getInputArea().getText();
+			FileChooser fileChooser = new FileChooser();
+			  
+            //Set extension filter
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+            fileChooser.getExtensionFilters().add(extFilter);
+            
+            //Show save file dialog
+            File file = fileChooser.showSaveDialog(stage);
+            
+            if(file != null){
+                SaveFile(s, file);
+            }
 			//NEED TO FIGURE OUT HOW TO SAVE HERE
 		});
+		
 		
 		closeMenuItem.setOnAction(action -> {
 			inputArea.setText("");
@@ -189,4 +206,17 @@ public class WindowView {
 					syllables)));
 		});
 	}
+	private void SaveFile(String content, File file){
+        try {
+            FileWriter fileWriter;
+              
+            fileWriter = new FileWriter(file);
+            fileWriter.write(content);
+            fileWriter.close();
+        } catch (IOException ex) {
+            Logger.getLogger(WindowView.class
+                .getName()).log(Level.SEVERE, null, ex);
+        }
+          
+    }
 }
